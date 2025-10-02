@@ -1,0 +1,23 @@
+Architecture Layer,Current Implementation,Multi-Depot Changes Required,Implementation Complexity,Development Time (Days)
+Data Ingestion,Single Maximo connection,Multiple Maximo connections (per depot),Medium,5-7
+Data Ingestion,Single IoT data stream,Multiple IoT streams with depot identification,Medium,3-5
+Data Ingestion,Centralized validation,Depot-specific validation + global validation,High,7-10
+Multi-Agent System,Single optimization agent,Local optimization agents per depot,High,10-15
+Multi-Agent System,Centralized constraint handling,Global coordination agent for conflict resolution,High,15-20
+Multi-Agent System,Single ML prediction service,Federated ML with local + global models,High,12-18
+Multi-Agent System,No resource sharing logic,Resource sharing agent between depots,Medium,8-12
+Optimization Engine,Single CP-SAT solver instance,Local CP-SAT per depot + global coordinator,High,15-20
+Optimization Engine,Single genetic algorithm run,Local GA per depot + cross-depot optimization,High,12-18
+Optimization Engine,Centralized optimization,Two-phase optimization (local → global),Very High,20-25
+Database Layer,Single PostgreSQL instance,Local PostgreSQL per depot + global database,Medium,5-8
+Database Layer,Single Redis cache,Distributed Redis across depots,Medium,3-5
+Database Layer,Centralized data storage,Hybrid storage (local + shared),High,8-12
+API Layer,Single optimization endpoint,Depot-specific optimization endpoints,Medium,5-8
+API Layer,No depot-specific APIs,Resource sharing request/approval APIs,Medium,6-10
+API Layer,No resource sharing APIs,Cross-depot data synchronization APIs,High,10-15
+User Interface,Single dashboard view,Per-depot dashboards + global command center,Medium,8-12
+User Interface,No depot separation,Depot-specific views and controls,Low,3-5
+User Interface,No cross-depot visualization,Cross-depot resource visualization,Medium,10-15
+Configuration,Single depot configuration,Per-depot configuration files,Low,2-3
+Configuration,No resource sharing rules,Resource sharing policies and rules,Medium,5-8
+Configuration,No depot coordination settings,Inter-depot coordination parameters,Medium,3-5

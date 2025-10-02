@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KMRL Digital Twin - Kochi Metro Rail System</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="kmrl-logo">
+                        <div class="logo-icon">🚇</div>
+                        <div class="logo-text">
+                            <h1>KMRL Digital Twin</h1>
+                            <p>Kochi Metro Rail Limited</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="system-status">
+                    <div class="status-item">
+                        <span class="status-label">System Status</span>
+                        <span class="status--success">Operational</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Active Trains</span>
+                        <span class="status-value" id="active-trains">18</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Current Time</span>
+                        <span class="status-value" id="current-time"></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="tab-navigation">
+            <button class="tab-button active" data-tab="overview">Overview</button>
+            <button class="tab-button" data-tab="route-map">Route Map</button>
+            <button class="tab-button" data-tab="analytics">Analytics</button>
+            <button class="tab-button" data-tab="energy">Energy Monitor</button>
+            <button class="tab-button" data-tab="operations">Operations</button>
+        </nav>
+
+        <!-- Tab Content -->
+        <main class="tab-content">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-pane active">
+                <div class="overview-grid">
+                    <div class="metric-card">
+                        <h3>Daily Ridership</h3>
+                        <div class="metric-value">82,000</div>
+                        <div class="metric-change">+5.2% from yesterday</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Punctuality Rate</h3>
+                        <div class="metric-value">99.5%</div>
+                        <div class="metric-change status--success">Above target</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>System Availability</h3>
+                        <div class="metric-value">98.7%</div>
+                        <div class="metric-change status--success">Excellent</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Solar Generation</h3>
+                        <div class="metric-value">11 MW</div>
+                        <div class="metric-change">55% of total energy</div>
+                    </div>
+                </div>
+
+                <div class="overview-charts">
+                    <div class="chart-container">
+                        <h3>Real-time Train Distribution</h3>
+                        <div style="position: relative; height: 300px;">
+                            <canvas id="train-distribution-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Energy Consumption Today</h3>
+                        <div style="position: relative; height: 300px;">
+                            <canvas id="energy-overview-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Route Map Tab -->
+            <div id="route-map" class="tab-pane">
+                <div class="route-controls">
+                    <div class="control-group">
+                        <button class="btn btn--primary" id="play-pause-btn">⏸️ Pause Simulation</button>
+                        <button class="btn btn--secondary" id="reset-simulation">🔄 Reset</button>
+                        <div class="speed-control">
+                            <label>Simulation Speed:</label>
+                            <input type="range" id="speed-slider" min="0.5" max="3" step="0.1" value="1">
+                            <span id="speed-display">1x</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="route-map-container">
+                    <svg id="route-svg" viewBox="0 0 900 700">
+                        <!-- Track line will be drawn here -->
+                        <defs>
+                            <linearGradient id="trackGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#1d4ed8"/>
+                                <stop offset="100%" style="stop-color:#059669"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Stations and trains will be dynamically added -->
+                    </svg>
+                </div>
+
+                <div class="train-info-panel">
+                    <h3>Live Train Information</h3>
+                    <div id="train-list"></div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics" class="tab-pane">
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3>Passenger Flow Analysis</h3>
+                        <div style="position: relative; height: 300px;">
+                            <canvas id="passenger-flow-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Station Utilization</h3>
+                        <div style="position: relative; height: 300px;">
+                            <canvas id="station-utilization-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Train Performance Metrics</h3>
+                        <div style="position: relative; height: 300px;">
+                            <canvas id="train-performance-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Revenue Distribution</h3>
+                        <div style="position: relative; height: 300px;">
+                            <canvas id="revenue-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Energy Monitor Tab -->
+            <div id="energy" class="tab-pane">
+                <div class="energy-dashboard">
+                    <div class="energy-overview">
+                        <div class="energy-card primary">
+                            <h3>Total Energy Requirement</h3>
+                            <div class="energy-value">20 MW</div>
+                            <div class="energy-detail">Peak demand capacity</div>
+                        </div>
+                        <div class="energy-card success">
+                            <h3>Solar Generation</h3>
+                            <div class="energy-value">11 MW</div>
+                            <div class="energy-detail">55% renewable energy</div>
+                        </div>
+                        <div class="energy-card warning">
+                            <h3>Grid Power</h3>
+                            <div class="energy-value">9 MW</div>
+                            <div class="energy-detail">45% conventional source</div>
+                        </div>
+                        <div class="energy-card info">
+                            <h3>Current Consumption</h3>
+                            <div class="energy-value">16.5 MW</div>
+                            <div class="energy-detail">82.5% of capacity</div>
+                        </div>
+                    </div>
+
+                    <div class="energy-charts">
+                        <div class="chart-container">
+                            <h3>Energy Mix Distribution</h3>
+                            <div style="position: relative; height: 400px;">
+                                <canvas id="energy-mix-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <h3>24-Hour Energy Consumption</h3>
+                            <div style="position: relative; height: 400px;">
+                                <canvas id="energy-consumption-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="environmental-impact">
+                        <h3>Environmental Impact</h3>
+                        <div class="impact-metrics">
+                            <div class="impact-item">
+                                <span class="impact-value">8,500 kg</span>
+                                <span class="impact-label">CO₂ Savings Daily</span>
+                            </div>
+                            <div class="impact-item">
+                                <span class="impact-value">3.1M kg</span>
+                                <span class="impact-label">Annual Carbon Reduction</span>
+                            </div>
+                            <div class="impact-item">
+                                <span class="impact-value">55%</span>
+                                <span class="impact-label">Renewable Energy Share</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Operations Tab -->
+            <div id="operations" class="tab-pane">
+                <div class="operations-dashboard">
+                    <div class="operations-summary">
+                        <div class="ops-card">
+                            <h4>Active Trains</h4>
+                            <div class="ops-value" id="ops-active-trains">18</div>
+                        </div>
+                        <div class="ops-card">
+                            <h4>Average Speed</h4>
+                            <div class="ops-value">34 km/h</div>
+                        </div>
+                        <div class="ops-card">
+                            <h4>On-time Performance</h4>
+                            <div class="ops-value">99.5%</div>
+                        </div>
+                        <div class="ops-card warning">
+                            <h4>Maintenance Alerts</h4>
+                            <div class="ops-value">3</div>
+                        </div>
+                    </div>
+
+                    <div class="operations-details">
+                        <div class="detail-section">
+                            <h3>System Alerts</h3>
+                            <div class="alert-list">
+                                <div class="alert-item status--warning">
+                                    <span class="alert-time">14:25</span>
+                                    <span class="alert-message">Train T009 (BHAVANI) - Scheduled maintenance at Muttom Depot</span>
+                                </div>
+                                <div class="alert-item status--info">
+                                    <span class="alert-time">14:18</span>
+                                    <span class="alert-message">Peak hour operations initiated - All 20 trains deployed</span>
+                                </div>
+                                <div class="alert-item status--success">
+                                    <span class="alert-time">14:10</span>
+                                    <span class="alert-message">Solar power generation optimal - 11MW achieved</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-section">
+                            <h3>Train Fleet Status</h3>
+                            <div class="fleet-grid" id="fleet-status"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Train Detail Modal -->
+    <div id="train-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-train-name">Train Details</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-train-details">
+                <!-- Train details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
